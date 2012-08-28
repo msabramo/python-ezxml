@@ -1,5 +1,10 @@
 import sys
-import unittest
+
+try:
+    import unittest2 as unittest
+except ImportError:
+    import unittest
+
 import lxml.objectify
 import ezxml
 
@@ -15,7 +20,7 @@ class XMLTests(unittest.TestCase):
                     <Item><ISBN>9780321558237</ISBN></Item>
                 </Items>
             </Books>
-            """.strip()
+            """.strip().encode('utf-8')
 
     def get_people_xml(self):
         return """
@@ -30,7 +35,7 @@ class XMLTests(unittest.TestCase):
                     <Age>3</Age>
                 </Person>
             </People>
-            """.strip()
+            """.strip().encode('utf-8')
 
     def get_pricing_xml(self):
         return """
@@ -41,7 +46,7 @@ class XMLTests(unittest.TestCase):
                     <Item><BiblioId>16432444</BiblioId></Item>
                 </Items>
             </ProductPricing>
-            """.strip()
+            """.strip().encode('utf-8')
 
     def get_plist_xml(self):
         return """
@@ -61,7 +66,7 @@ class XMLTests(unittest.TestCase):
                 <string>270001000000000</string>
             </dict>
             </plist>
-            """.strip()
+            """.strip().encode('utf-8')
 
     def get_sample_xhtml(self):
         # @todo I stripped out the xmlns stuff, because I don't know how to handle that with ElementTree yet
@@ -94,7 +99,7 @@ class XMLTests(unittest.TestCase):
             </div>
             </body>
             </html>
-            """.strip()
+            """.strip().encode('utf-8')
 
     def test_books_xml(self):
         for objectifier in (lxml.objectify, ezxml):
@@ -166,10 +171,10 @@ class ObjectifiedElementTests(unittest.TestCase):
             try:
                 obj = objectifier.ObjectifiedElement()
                 # print('objectifier = %r; obj = %r' % (objectifier, obj))
-                self.assertEquals(obj.tag, 'ObjectifiedElement')
-                self.assertEquals(str(obj), '')
+                self.assertEqual(obj.tag, 'ObjectifiedElement')
+                self.assertEqual(str(obj), '')
                 # print("repr(obj) = %r" % repr(obj))
-                self.assert_('<Element ObjectifiedElement' in repr(obj))
+                self.assertTrue('<Element ObjectifiedElement' in repr(obj))
             except (AttributeError, AssertionError) as e:
                 sys.stderr.write("Failed tests (with objectifier = %r): %s\n" % (objectifier, e))
                 raise
@@ -180,10 +185,10 @@ class ObjectifiedElementTests(unittest.TestCase):
                 obj = objectifier.ObjectifiedElement()
                 # print('objectifier = %r; obj = %r' % (objectifier, obj))
                 obj.tag = 'books'
-                self.assertEquals(obj.tag, 'books')
-                self.assertEquals(str(obj), '')
+                self.assertEqual(obj.tag, 'books')
+                self.assertEqual(str(obj), '')
                 # print("repr(obj) = %r" % repr(obj))
-                self.assert_('<Element books' in repr(obj))
+                self.assertTrue('<Element books' in repr(obj))
                 self.assertEqual(obj.getparent(), None)
                 self.assertEqual(obj.getchildren(), [])
                 self.assertEqual(obj.countchildren(), 0)
@@ -224,7 +229,7 @@ class ObjectifiedElementTests(unittest.TestCase):
                 # print('objectifier = %r; obj = %r' % (objectifier, obj))
                 with self.assertRaises(TypeError) as cm:
                     obj.text = 'foobar'
-                self.assertEqual(cm.exception.message, "attribute 'text' of 'ObjectifiedElement' objects is not writable")
+                self.assertEqual(str(cm.exception), "attribute 'text' of 'ObjectifiedElement' objects is not writable")
             except (AttributeError, AssertionError) as e:
                 sys.stderr.write("Failed tests (with objectifier = %r): %s\n" % (objectifier, e))
                 raise
@@ -237,10 +242,10 @@ class ObjectifiedDataElementTests(unittest.TestCase):
             try:
                 obj = objectifier.ObjectifiedDataElement('MyValue')
                 # print('objectifier = %r; obj = %r' % (objectifier, obj))
-                self.assertEquals(obj.tag, 'ObjectifiedDataElement')
-                self.assertEquals(str(obj), 'MyValue')
-                self.assertEquals(repr(obj), 'MyValue')
-                self.assertEquals(obj.text, 'MyValue')
+                self.assertEqual(obj.tag, 'ObjectifiedDataElement')
+                self.assertEqual(str(obj), 'MyValue')
+                self.assertEqual(repr(obj), 'MyValue')
+                self.assertEqual(obj.text, 'MyValue')
             except (AttributeError, AssertionError) as e:
                 sys.stderr.write("Failed tests (with objectifier = %r): %s\n" % (objectifier, e))
                 raise
@@ -262,7 +267,7 @@ class ObjectifiedDataElementTests(unittest.TestCase):
                 # print('objectifier = %r; obj = %r' % (objectifier, obj))
                 with self.assertRaises(TypeError) as cm:
                     obj.text = 'foobar'
-                self.assertEqual(cm.exception.message, "attribute 'text' of 'ObjectifiedDataElement' objects is not writable")
+                self.assertEqual(str(cm.exception), "attribute 'text' of 'ObjectifiedDataElement' objects is not writable")
             except (AttributeError, AssertionError) as e:
                 sys.stderr.write("Failed tests (with objectifier = %r): %s\n" % (objectifier, e))
                 raise
