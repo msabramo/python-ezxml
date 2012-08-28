@@ -157,3 +157,121 @@ class XMLTests(unittest.TestCase):
             except (AttributeError, AssertionError) as e:
                 sys.stderr.write("Failed tests (with objectifier = %r): %s\n" % (objectifier, e))
                 raise
+
+
+class ObjectifiedElementTests(unittest.TestCase):
+
+    def test_init_with_no_args(self):
+        for objectifier in (lxml.objectify, ezxml):
+            try:
+                obj = objectifier.ObjectifiedElement()
+                # print('objectifier = %r; obj = %r' % (objectifier, obj))
+                self.assertEquals(obj.tag, 'ObjectifiedElement')
+                self.assertEquals(str(obj), '')
+                # print("repr(obj) = %r" % repr(obj))
+                self.assert_('<Element ObjectifiedElement' in repr(obj))
+            except (AttributeError, AssertionError) as e:
+                sys.stderr.write("Failed tests (with objectifier = %r): %s\n" % (objectifier, e))
+                raise
+
+    def test_set_tag(self):
+        for objectifier in (lxml.objectify, ezxml):
+            try:
+                obj = objectifier.ObjectifiedElement()
+                # print('objectifier = %r; obj = %r' % (objectifier, obj))
+                obj.tag = 'books'
+                self.assertEquals(obj.tag, 'books')
+                self.assertEquals(str(obj), '')
+                # print("repr(obj) = %r" % repr(obj))
+                self.assert_('<Element books' in repr(obj))
+                self.assertEqual(obj.getparent(), None)
+                self.assertEqual(obj.getchildren(), [])
+                self.assertEqual(obj.countchildren(), 0)
+            except (AttributeError, AssertionError) as e:
+                sys.stderr.write("Failed tests (with objectifier = %r): %s\n" % (objectifier, e))
+                raise
+
+    def test_append_1(self):
+        for objectifier in (lxml.objectify, ezxml):
+            try:
+                obj = objectifier.ObjectifiedElement()
+                # print('objectifier = %r; obj = %r' % (objectifier, obj))
+                obj.tag = 'books'
+                book1 = objectifier.ObjectifiedElement()
+                book1.tag = 'book'
+                obj.append(book1)
+                self.assertEqual(obj.getchildren(), [book1])
+                self.assertEqual(obj.countchildren(), 1)
+                self.assertEqual(book1.getparent(), obj)
+            except (AttributeError, AssertionError) as e:
+                sys.stderr.write("Failed tests (with objectifier = %r): %s\n" % (objectifier, e))
+                raise
+
+    def test_get_text_attribute(self):
+        for objectifier in (lxml.objectify, ezxml):
+            try:
+                obj = objectifier.ObjectifiedElement()
+                # print('objectifier = %r; obj = %r' % (objectifier, obj))
+                self.assertEqual(obj.text, None)
+            except (AttributeError, AssertionError) as e:
+                sys.stderr.write("Failed tests (with objectifier = %r): %s\n" % (objectifier, e))
+                raise
+
+    def test_set_text_attribute_not_writable(self):
+        for objectifier in (lxml.objectify, ezxml):
+            try:
+                obj = objectifier.ObjectifiedElement()
+                # print('objectifier = %r; obj = %r' % (objectifier, obj))
+                with self.assertRaises(TypeError) as cm:
+                    obj.text = 'foobar'
+                self.assertEqual(cm.exception.message, "attribute 'text' of 'ObjectifiedElement' objects is not writable")
+            except (AttributeError, AssertionError) as e:
+                sys.stderr.write("Failed tests (with objectifier = %r): %s\n" % (objectifier, e))
+                raise
+
+
+class ObjectifiedDataElementTests(unittest.TestCase):
+
+    def test_init(self):
+        for objectifier in (lxml.objectify, ezxml):
+            try:
+                obj = objectifier.ObjectifiedDataElement('MyValue')
+                # print('objectifier = %r; obj = %r' % (objectifier, obj))
+                self.assertEquals(obj.tag, 'ObjectifiedDataElement')
+                self.assertEquals(str(obj), 'MyValue')
+                self.assertEquals(repr(obj), 'MyValue')
+                self.assertEquals(obj.text, 'MyValue')
+            except (AttributeError, AssertionError) as e:
+                sys.stderr.write("Failed tests (with objectifier = %r): %s\n" % (objectifier, e))
+                raise
+
+    def test_get_text_attribute(self):
+        for objectifier in (lxml.objectify, ezxml):
+            try:
+                obj = objectifier.ObjectifiedDataElement('MyValue')
+                # print('objectifier = %r; obj = %r' % (objectifier, obj))
+                self.assertEqual(obj.text, 'MyValue')
+            except (AttributeError, AssertionError) as e:
+                sys.stderr.write("Failed tests (with objectifier = %r): %s\n" % (objectifier, e))
+                raise
+
+    def test_set_text_attribute_not_writable(self):
+        for objectifier in (lxml.objectify, ezxml):
+            try:
+                obj = objectifier.ObjectifiedDataElement('MyValue')
+                # print('objectifier = %r; obj = %r' % (objectifier, obj))
+                with self.assertRaises(TypeError) as cm:
+                    obj.text = 'foobar'
+                self.assertEqual(cm.exception.message, "attribute 'text' of 'ObjectifiedDataElement' objects is not writable")
+            except (AttributeError, AssertionError) as e:
+                sys.stderr.write("Failed tests (with objectifier = %r): %s\n" % (objectifier, e))
+                raise
+
+    def test_fromstring(self):
+        for objectifier in (lxml.objectify, ezxml):
+            try:
+                obj = objectifier.fromstring("""<books><book><title>Biology</title></book><book><title>Math</title></book></books>""")
+                # print('objectifier = %r; obj = %r' % (objectifier, obj))
+            except (AttributeError, AssertionError) as e:
+                sys.stderr.write("Failed tests (with objectifier = %r): %s\n" % (objectifier, e))
+                raise

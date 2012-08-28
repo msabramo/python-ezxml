@@ -6,13 +6,64 @@ except ImportError:
     import xml.etree.ElementTree as ElementTree
 
 
-class ObjectifiedDataElement(object):
+class ObjectifiedElement(object):
 
-    def __init__(self, tag):
-        self.tag = tag
+    def __init__(self):
+        self.tag = self.__class__.__name__
+        self._children = []
+        self._parent = None
+        self._text = None
 
     def __str__(self):
-        return self.tag
+        return ''
+
+    def __repr__(self):
+        return super(ObjectifiedElement, self).__repr__().replace(
+            '<ezxml.%s object' % self.__class__.__name__,
+            '<Element %s' % self.tag)
+
+    def getparent(self):
+        return self._parent
+
+    def getchildren(self):
+        return self._children
+
+    def countchildren(self):
+        return len(self.getchildren())
+
+    def append(self, child):
+        child._parent = self
+        self._children.append(child)
+
+    def __setattr__(self, attr_name, value):
+        if attr_name == 'text':
+            raise TypeError("attribute %r of %r objects is not writable"
+                % (attr_name, self.__class__.__name__))
+
+        super(ObjectifiedElement, self).__setattr__(attr_name, value)
+
+    @property
+    def text(self):
+        return self._text
+
+
+class ObjectifiedDataElement(ObjectifiedElement):
+
+    def __init__(self, text):
+        super(ObjectifiedDataElement, self).__init__()
+        self.tag = 'ObjectifiedDataElement'
+        self._text = text
+
+    def __str__(self):
+        return self.text
+
+    def __repr__(self):
+        return self.text
+
+
+class StringElement(ObjectifiedDataElement):
+
+    pass
 
 
 def arrayify_etree(e):
