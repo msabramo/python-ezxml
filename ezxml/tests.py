@@ -5,8 +5,15 @@ try:
 except ImportError:
     import unittest
 
-import lxml.objectify
 import ezxml
+
+objectifiers = [ezxml]
+
+try:
+    import lxml.objectify
+    objectifiers.append(lxml.objectify)
+except ImportError:
+    pass
 
 
 class XMLTests(unittest.TestCase):
@@ -102,7 +109,7 @@ class XMLTests(unittest.TestCase):
             """.strip().encode('utf-8')
 
     def test_books_xml(self):
-        for objectifier in (lxml.objectify, ezxml):
+        for objectifier in objectifiers:
             try:
                 obj = objectifier.fromstring(self.get_books_xml())
                 # print('objectifier = %r; obj = %r' % (objectifier, obj))
@@ -112,7 +119,7 @@ class XMLTests(unittest.TestCase):
                 self.fail("Failed tests (with objectifier = %r): %s" % (objectifier, e))
 
     def test_people_xml(self):
-        for objectifier in (lxml.objectify, ezxml):
+        for objectifier in objectifiers:
             try:
                 obj = objectifier.fromstring(self.get_people_xml())
                 # print('objectifier = %r; obj = %r' % (objectifier, obj))
@@ -124,7 +131,7 @@ class XMLTests(unittest.TestCase):
                 self.fail("Failed tests (with objectifier = %r): %s" % (objectifier, e))
 
     def test_pricing_xml(self):
-        for objectifier in (lxml.objectify, ezxml):
+        for objectifier in objectifiers:
             try:
                 obj = objectifier.fromstring(self.get_pricing_xml())
                 # print('objectifier = %r; obj = %r' % (objectifier, obj))
@@ -134,7 +141,7 @@ class XMLTests(unittest.TestCase):
                 self.fail("Failed tests (with objectifier = %r): %s" % (objectifier, e))
 
     def test_plist_xml(self):
-        for objectifier in (lxml.objectify, ezxml):
+        for objectifier in objectifiers:
             try:
                 obj = objectifier.fromstring(self.get_plist_xml())
                 # print('objectifier = %r; obj = %r' % (objectifier, obj))
@@ -151,7 +158,7 @@ class XMLTests(unittest.TestCase):
                 raise
 
     def test_sample_xhtml(self):
-        for objectifier in (lxml.objectify, ezxml):
+        for objectifier in objectifiers:
             try:
                 obj = objectifier.fromstring(self.get_sample_xhtml())
                 # print('objectifier = %r; obj = %r' % (objectifier, obj))
@@ -167,7 +174,7 @@ class XMLTests(unittest.TestCase):
 class ObjectifiedElementTests(unittest.TestCase):
 
     def test_init_with_no_args(self):
-        for objectifier in (lxml.objectify, ezxml):
+        for objectifier in objectifiers:
             try:
                 obj = objectifier.ObjectifiedElement()
                 # print('objectifier = %r; obj = %r' % (objectifier, obj))
@@ -180,7 +187,7 @@ class ObjectifiedElementTests(unittest.TestCase):
                 raise
 
     def test_set_tag(self):
-        for objectifier in (lxml.objectify, ezxml):
+        for objectifier in objectifiers:
             try:
                 obj = objectifier.ObjectifiedElement()
                 # print('objectifier = %r; obj = %r' % (objectifier, obj))
@@ -197,7 +204,7 @@ class ObjectifiedElementTests(unittest.TestCase):
                 raise
 
     def test_append_1(self):
-        for objectifier in (lxml.objectify, ezxml):
+        for objectifier in objectifiers:
             try:
                 obj = objectifier.ObjectifiedElement()
                 # print('objectifier = %r; obj = %r' % (objectifier, obj))
@@ -213,7 +220,7 @@ class ObjectifiedElementTests(unittest.TestCase):
                 raise
 
     def test_get_text_attribute(self):
-        for objectifier in (lxml.objectify, ezxml):
+        for objectifier in objectifiers:
             try:
                 obj = objectifier.ObjectifiedElement()
                 # print('objectifier = %r; obj = %r' % (objectifier, obj))
@@ -223,7 +230,7 @@ class ObjectifiedElementTests(unittest.TestCase):
                 raise
 
     def test_set_text_attribute_not_writable(self):
-        for objectifier in (lxml.objectify, ezxml):
+        for objectifier in objectifiers:
             try:
                 obj = objectifier.ObjectifiedElement()
                 # print('objectifier = %r; obj = %r' % (objectifier, obj))
@@ -238,7 +245,7 @@ class ObjectifiedElementTests(unittest.TestCase):
 class ObjectifiedDataElementTests(unittest.TestCase):
 
     def test_init(self):
-        for objectifier in (lxml.objectify, ezxml):
+        for objectifier in objectifiers:
             try:
                 obj = objectifier.ObjectifiedDataElement('MyValue')
                 # print('objectifier = %r; obj = %r' % (objectifier, obj))
@@ -251,7 +258,7 @@ class ObjectifiedDataElementTests(unittest.TestCase):
                 raise
 
     def test_get_text_attribute(self):
-        for objectifier in (lxml.objectify, ezxml):
+        for objectifier in objectifiers:
             try:
                 obj = objectifier.ObjectifiedDataElement('MyValue')
                 # print('objectifier = %r; obj = %r' % (objectifier, obj))
@@ -261,7 +268,7 @@ class ObjectifiedDataElementTests(unittest.TestCase):
                 raise
 
     def test_set_text_attribute_not_writable(self):
-        for objectifier in (lxml.objectify, ezxml):
+        for objectifier in objectifiers:
             try:
                 obj = objectifier.ObjectifiedDataElement('MyValue')
                 # print('objectifier = %r; obj = %r' % (objectifier, obj))
@@ -273,7 +280,7 @@ class ObjectifiedDataElementTests(unittest.TestCase):
                 raise
 
     def test_fromstring(self):
-        for objectifier in (lxml.objectify, ezxml):
+        for objectifier in objectifiers:
             try:
                 obj = objectifier.fromstring("""<books><book><title>Biology</title></book><book><title>Math</title></book></books>""")
                 # print('objectifier = %r; obj = %r' % (objectifier, obj))
