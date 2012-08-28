@@ -8,14 +8,25 @@ except ImportError:
 
 class ObjectifiedElement(object):
 
-    def __init__(self):
+    def __init__(self, *args):
+        if len(args) > 0:
+            if isinstance(args[0], basestring):
+                text = args[0]
+            else:
+                raise TypeError("Invalid child type: %r" % type(args[0]))
+        else:
+            text = None
+
         self.tag = self.__class__.__name__
         self._children = []
         self._parent = None
-        self._text = None
+        self._text = text
 
     def __str__(self):
-        return ''
+        if self.text:
+            return self.text
+        else:
+            return ''
 
     def __repr__(self):
         return super(ObjectifiedElement, self).__repr__().replace(
@@ -49,21 +60,27 @@ class ObjectifiedElement(object):
 
 class ObjectifiedDataElement(ObjectifiedElement):
 
-    def __init__(self, text):
-        super(ObjectifiedDataElement, self).__init__()
-        self.tag = 'ObjectifiedDataElement'
-        self._text = text
+    # def __init__(self, text=None):
+    #     super(ObjectifiedDataElement, self).__init__()
+    #     self._text = text
 
-    def __str__(self):
-        return self.text
+    # def __unicode__(self):
+    #     if self.text:
+    #         return self.text
+    #     else:
+    #         return u''
 
     def __repr__(self):
-        return self.text
+        return unicode(self)
 
 
 class StringElement(ObjectifiedDataElement):
 
-    pass
+    def __repr__(self):
+        if self.text:
+            return repr(str(self))
+        else:
+            return "u''"
 
 
 def arrayify_etree(e):

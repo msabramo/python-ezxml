@@ -186,6 +186,59 @@ class ObjectifiedElementTests(unittest.TestCase):
                 sys.stderr.write("Failed tests (with objectifier = %r): %s\n" % (objectifier, e))
                 raise
 
+    def test_init_with_string_arg(self):
+        for objectifier in objectifiers:
+            try:
+                obj = objectifier.ObjectifiedElement('Foo')
+                # print('objectifier = %r; obj = %r' % (objectifier, obj))
+                self.assertEqual(obj.tag, 'ObjectifiedElement')
+                self.assertEqual(str(obj), 'Foo')
+                # print("repr(obj) = %r" % repr(obj))
+                self.assertTrue('<Element ObjectifiedElement' in repr(obj))
+            except (AttributeError, AssertionError) as e:
+                sys.stderr.write("Failed tests (with objectifier = %r): %s\n" % (objectifier, e))
+                raise
+
+    def test_init_with_float_arg(self):
+        for objectifier in objectifiers:
+            try:
+                with self.assertRaises(TypeError) as cm:
+                    objectifier.ObjectifiedElement(3.14)
+                self.assertEqual(str(cm.exception), "Invalid child type: <type 'float'>")
+            except (AttributeError, AssertionError) as e:
+                sys.stderr.write("Failed tests (with objectifier = %r): %s\n" % (objectifier, e))
+                raise
+
+    def test_init_with_int_arg(self):
+        for objectifier in objectifiers:
+            try:
+                with self.assertRaises(TypeError) as cm:
+                    objectifier.ObjectifiedElement(34)
+                self.assertEqual(str(cm.exception), "Invalid child type: <type 'int'>")
+            except (AttributeError, AssertionError) as e:
+                sys.stderr.write("Failed tests (with objectifier = %r): %s\n" % (objectifier, e))
+                raise
+
+    def test_init_with_tuple_arg(self):
+        for objectifier in objectifiers:
+            try:
+                with self.assertRaises(TypeError) as cm:
+                    objectifier.ObjectifiedElement((34, 56))
+                self.assertEqual(str(cm.exception), "Invalid child type: <type 'tuple'>")
+            except (AttributeError, AssertionError) as e:
+                sys.stderr.write("Failed tests (with objectifier = %r): %s\n" % (objectifier, e))
+                raise
+
+    def test_init_with_none_arg(self):
+        for objectifier in objectifiers:
+            try:
+                with self.assertRaises(TypeError) as cm:
+                    objectifier.ObjectifiedElement(None)
+                self.assertEqual(str(cm.exception), "Invalid child type: <type 'NoneType'>")
+            except (AttributeError, AssertionError) as e:
+                sys.stderr.write("Failed tests (with objectifier = %r): %s\n" % (objectifier, e))
+                raise
+
     def test_set_tag(self):
         for objectifier in objectifiers:
             try:
@@ -244,7 +297,7 @@ class ObjectifiedElementTests(unittest.TestCase):
 
 class ObjectifiedDataElementTests(unittest.TestCase):
 
-    def test_init(self):
+    def test_init_with_string_arg(self):
         for objectifier in objectifiers:
             try:
                 obj = objectifier.ObjectifiedDataElement('MyValue')
@@ -253,6 +306,46 @@ class ObjectifiedDataElementTests(unittest.TestCase):
                 self.assertEqual(str(obj), 'MyValue')
                 self.assertEqual(repr(obj), 'MyValue')
                 self.assertEqual(obj.text, 'MyValue')
+            except (AttributeError, AssertionError) as e:
+                sys.stderr.write("Failed tests (with objectifier = %r): %s\n" % (objectifier, e))
+                raise
+
+    def test_init_with_float_arg(self):
+        for objectifier in objectifiers:
+            try:
+                with self.assertRaises(TypeError) as cm:
+                    objectifier.ObjectifiedDataElement(3.14)
+                self.assertEqual(str(cm.exception), "Invalid child type: <type 'float'>")
+            except (AttributeError, AssertionError) as e:
+                sys.stderr.write("Failed tests (with objectifier = %r): %s\n" % (objectifier, e))
+                raise
+
+    def test_init_with_int_arg(self):
+        for objectifier in objectifiers:
+            try:
+                with self.assertRaises(TypeError) as cm:
+                    objectifier.ObjectifiedDataElement(34)
+                self.assertEqual(str(cm.exception), "Invalid child type: <type 'int'>")
+            except (AttributeError, AssertionError) as e:
+                sys.stderr.write("Failed tests (with objectifier = %r): %s\n" % (objectifier, e))
+                raise
+
+    def test_init_with_tuple_arg(self):
+        for objectifier in objectifiers:
+            try:
+                with self.assertRaises(TypeError) as cm:
+                    objectifier.ObjectifiedDataElement((34, 56))
+                self.assertEqual(str(cm.exception), "Invalid child type: <type 'tuple'>")
+            except (AttributeError, AssertionError) as e:
+                sys.stderr.write("Failed tests (with objectifier = %r): %s\n" % (objectifier, e))
+                raise
+
+    def test_init_with_none_arg(self):
+        for objectifier in objectifiers:
+            try:
+                with self.assertRaises(TypeError) as cm:
+                    objectifier.ObjectifiedDataElement(None)
+                self.assertEqual(str(cm.exception), "Invalid child type: <type 'NoneType'>")
             except (AttributeError, AssertionError) as e:
                 sys.stderr.write("Failed tests (with objectifier = %r): %s\n" % (objectifier, e))
                 raise
@@ -287,3 +380,93 @@ class ObjectifiedDataElementTests(unittest.TestCase):
             except (AttributeError, AssertionError) as e:
                 sys.stderr.write("Failed tests (with objectifier = %r): %s\n" % (objectifier, e))
                 raise
+
+
+class StringElementTests(unittest.TestCase):
+
+    def test_init_with_no_arg(self):
+        for objectifier in objectifiers:
+            try:
+                obj = objectifier.StringElement()
+                # print('objectifier = %r; obj = %r' % (objectifier, obj))
+                self.assertEqual(obj.tag, 'StringElement')
+                self.assertEqual(str(obj), '')
+                self.assertEqual(repr(obj), "u''")
+                self.assertEqual(obj.text, None)
+
+                # Setting the `tag` attribute shouldn't affect anything
+                obj.tag = 'Foo'
+                self.assertEqual(obj.tag, 'Foo')
+                self.assertEqual(str(obj), '')
+                self.assertEqual(repr(obj), "u''")
+                self.assertEqual(obj.text, None)
+            except (AttributeError, AssertionError) as e:
+                sys.stderr.write("Failed tests (with objectifier = %r): %s\n" % (objectifier, e))
+                raise
+
+    def test_init_with_string_arg(self):
+        for objectifier in objectifiers:
+            try:
+                obj = objectifier.StringElement('MyValue')
+                # print('objectifier = %r; obj = %r' % (objectifier, obj))
+                self.assertEqual(obj.tag, 'StringElement')
+                self.assertEqual(str(obj), 'MyValue')
+                self.assertEqual(repr(obj), "'MyValue'")
+                self.assertEqual(obj.text, 'MyValue')
+            except (AttributeError, AssertionError) as e:
+                sys.stderr.write("Failed tests (with objectifier = %r): %s\n" % (objectifier, e))
+                raise
+
+    def test_init_with_float_arg(self):
+        for objectifier in objectifiers:
+            try:
+                with self.assertRaises(TypeError) as cm:
+                    obj = objectifier.StringElement(3.14)
+                self.assertEqual(str(cm.exception), "Invalid child type: <type 'float'>")
+            except (AttributeError, AssertionError) as e:
+                sys.stderr.write("Failed tests (with objectifier = %r): %s\n" % (objectifier, e))
+                raise
+
+    def test_init_with_int_arg(self):
+        for objectifier in objectifiers:
+            try:
+                with self.assertRaises(TypeError) as cm:
+                    obj = objectifier.StringElement(34)
+                self.assertEqual(str(cm.exception), "Invalid child type: <type 'int'>")
+            except (AttributeError, AssertionError) as e:
+                sys.stderr.write("Failed tests (with objectifier = %r): %s\n" % (objectifier, e))
+                raise
+
+    def test_init_with_tuple_arg(self):
+        for objectifier in objectifiers:
+            try:
+                with self.assertRaises(TypeError) as cm:
+                    obj = objectifier.StringElement((34, 56))
+                self.assertEqual(str(cm.exception), "Invalid child type: <type 'tuple'>")
+            except (AttributeError, AssertionError) as e:
+                sys.stderr.write("Failed tests (with objectifier = %r): %s\n" % (objectifier, e))
+                raise
+
+    def test_init_with_none_arg(self):
+        for objectifier in objectifiers:
+            try:
+                with self.assertRaises(TypeError) as cm:
+                    obj = objectifier.StringElement(None)
+                self.assertEqual(str(cm.exception), "Invalid child type: <type 'NoneType'>")
+            except (AttributeError, AssertionError) as e:
+                sys.stderr.write("Failed tests (with objectifier = %r): %s\n" % (objectifier, e))
+                raise
+
+    def test_set_text_attribute_not_writable(self):
+        for objectifier in objectifiers:
+            try:
+                obj = objectifier.StringElement('MyValue')
+                # print('objectifier = %r; obj = %r' % (objectifier, obj))
+                with self.assertRaises(TypeError) as cm:
+                    obj.text = 'foobar'
+                self.assertEqual(str(cm.exception), "attribute 'text' of 'StringElement' objects is not writable")
+            except (AttributeError, AssertionError) as e:
+                sys.stderr.write("Failed tests (with objectifier = %r): %s\n" % (objectifier, e))
+                raise
+
+
