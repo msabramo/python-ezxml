@@ -1,0 +1,8 @@
+distribute==0.6.28
+-e git+https://github.com/msabramo/python-ezxml.git@801b78de3df02ed0a298483fb6cbdb4de997016f#egg=ezxml-dev
+ipython==0.13
+lxml==3.0alpha2
+nose==1.1.2
+parameterizedtestcase==0.0.2
+readline==6.2.2
+wsgiref==0.1.2
