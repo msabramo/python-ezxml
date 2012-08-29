@@ -1,4 +1,7 @@
-import json
+try:
+    import simplejson as json
+except ImportError:
+    import json
 
 try:
     import xml.etree.cElementTree as ElementTree
