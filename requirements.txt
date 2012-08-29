@@ -1,0 +1,2 @@
+# parameterizedtestcase==0.0.2
+git+https://github.com/msabramo/python_unittest_parameterized_test_case.git@master#egg=parameterizedtestcase-dev-master
