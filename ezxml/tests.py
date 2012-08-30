@@ -340,14 +340,14 @@ class StringElementTests(EZXMLTests):
         # print('objectifier = %r; obj = %r' % (objectifier, obj))
         self.assertEqual(obj.tag, 'StringElement')
         self.assertEqual(str(obj), '')
-        self.assertEqual(repr(obj), "u''")
+        self.assertEqual(repr(obj), repr(u''))
         self.assertEqual(obj.text, None)
 
         # Setting the `tag` attribute shouldn't affect anything
         obj.tag = 'Foo'
         self.assertEqual(obj.tag, 'Foo')
         self.assertEqual(str(obj), '')
-        self.assertEqual(repr(obj), "u''")
+        self.assertEqual(repr(obj), repr(u''))
         self.assertEqual(obj.text, None)
 
     @for_each_objectifier

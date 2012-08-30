@@ -83,7 +83,7 @@ class StringElement(ObjectifiedDataElement):
         if self.text:
             return repr(str(self))
         else:
-            return "u''"
+            return repr(u'')
 
 
 def arrayify_etree(e):
